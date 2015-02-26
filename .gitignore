@@ -26,3 +26,4 @@ doc/
 .secret
 **/*.secret
 
+bundle_bin/
