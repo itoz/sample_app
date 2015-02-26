@@ -3,6 +3,10 @@ require 'spec_helper'
 describe "StaticPages" do
 
 
+    #変数
+    let(:base_title) { "Ruby on Rails Tutorial Sample App" }
+
+
     describe "Static pages" do
 
         ##------------------------------------
@@ -20,7 +24,7 @@ describe "StaticPages" do
 
             it "should have the title Home" do
                 visit '/static_pages/home'
-                expect(page).to have_title("Ruby on Rails Tutorial Sample App | Home")
+                expect(page).to have_title("#{base_title} | Home")
             end
         end
 
@@ -42,7 +46,7 @@ describe "StaticPages" do
             # title にHelpがある
             it "should have the title Help" do
                 visit '/static_pages/help'
-                expect(page).to have_title("Ruby on Rails Tutorial Sample App | Help")
+                expect(page).to have_title("#{base_title} | Help")
             end
         end
 
@@ -52,8 +56,6 @@ describe "StaticPages" do
         ##------------------------------------
 
         describe "About page" do
-
-
             ##------------------------------------
             # About Usという文字列が、 含まれていなければならない」
             it "should have the content 'About Us'" do
@@ -66,22 +68,22 @@ describe "StaticPages" do
             # title にAboutがある
             it "should have the title About" do
                 visit '/static_pages/about'
-                expect(page).to have_title("Ruby on Rails Tutorial Sample App | About Us")
+                expect(page).to have_title("#{base_title} | About Us")
             end
 
         end
 
-
+        ##------------------------------------
+        #「/static_pages/contact ページにアクセスしたとき、
+        ##------------------------------------
         describe "Contact Page" do
             it "should have the content Contact" do
                 visit '/static_pages/contact'
                 expect(page).to have_content("Contact")
             end
-
-
             it "shoud have the title Contact" do
                 visit "/static_pages/contact"
-                expect(page).to have_title("Ruby on Rails Tutorial Sample App | Contact")
+                expect(page).to have_title("#{base_title} | Contact")
             end
 
         end
