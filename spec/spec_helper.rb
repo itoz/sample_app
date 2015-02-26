@@ -39,4 +39,9 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = "random"
+
+  #------------------------------------
+  #テストが正常に実行されるようにするために追加
+  #------------------------------------
+  config.include Capybara::DSL
 end
