@@ -5,9 +5,24 @@
 require "active_support/inflector"
 
 
-# guard 'rspec' do
+guard 'spork',
+      :cucumber_env => { 'RAILS_ENV' => 'test' },
+      :rspec_env    => { 'RAILS_ENV' => 'test' } do
+        watch('config/application.rb')
+        watch('config/environment.rb')
+        watch('config/environments/test.rb')
+        watch(%r{^config/initializers/.+\.rb$})
+        watch('Gemfile')
+        watch('Gemfile.lock')
+        watch('spec/spec_helper.rb') { :rspec }
+        watch('test/test_helper.rb') { :test_unit }
+        watch(%r{features/support/}) { :cucumber }
+      end
 
-guard 'rspec', all_after_pass: false do
+# guard 'rspec' do
+# guard 'rspec', all_after_pass: false do
+
+guard 'rspec', after_all_pass: false, cli: '--drb' do
 
   watch(%r{^spec/.+_spec\.rb$})
   watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
@@ -29,8 +44,9 @@ guard 'rspec', all_after_pass: false do
   watch(%r{^spec/acceptance/steps/(.+)_steps\.rb$})   { |m| Dir[File.join("**/#{m[1]}.feature")][0] || 'spec/acceptance' }
 
   #-------------------------------
-  #追記
+  #add
   #-------------------------------
+
   # Custom Rails Tutorial specs
   watch(%r{^app/controllers/(.+)_(controller)\.rb$})  do |m|
     ["spec/routing/#{m[1]}_routing_spec.rb",
@@ -48,6 +64,29 @@ guard 'rspec', all_after_pass: false do
   watch(%r{^app/controllers/sessions_controller\.rb$}) do |m|
     "spec/requests/authentication_pages_spec.rb"
   end
-
 end
 
+
+guard 'spork', :cucumber_env => { 'RAILS_ENV' => 'test' }, :rspec_env => { 'RAILS_ENV' => 'test' } do
+  watch('config/application.rb')
+  watch('config/environment.rb')
+  watch('config/environments/test.rb')
+  watch(%r{^config/initializers/.+\.rb$})
+  watch('Gemfile')
+  watch('Gemfile.lock')
+  watch('spec/spec_helper.rb') { :rspec }
+  watch('test/test_helper.rb') { :test_unit }
+  watch(%r{features/support/}) { :cucumber }
+end
+
+guard 'spork', :cucumber_env => { 'RAILS_ENV' => 'test' }, :rspec_env => { 'RAILS_ENV' => 'test' } do
+  watch('config/application.rb')
+  watch('config/environment.rb')
+  watch('config/environments/test.rb')
+  watch(%r{^config/initializers/.+\.rb$})
+  watch('Gemfile')
+  watch('Gemfile.lock')
+  watch('spec/spec_helper.rb') { :rspec }
+  watch('test/test_helper.rb') { :test_unit }
+  watch(%r{features/support/}) { :cucumber }
+end
