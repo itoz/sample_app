@@ -48,8 +48,8 @@
       <file leaf-file-name="routes.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/config/routes.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.87827426" vertical-offset="15" max-vertical-offset="1065">
-              <caret line="39" column="35" selection-start-line="39" selection-start-column="35" selection-end-line="39" selection-end-column="35" />
+            <state vertical-scroll-proportion="0.6009245" vertical-offset="0" max-vertical-offset="1065">
+              <caret line="26" column="28" selection-start-line="26" selection-start-column="28" selection-end-line="26" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -96,8 +96,8 @@
     <treeState />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="618" />
-    <option name="y" value="44" />
+    <option name="x" value="600" />
+    <option name="y" value="76" />
     <option name="width" value="1279" />
     <option name="height" value="1044" />
   </component>
@@ -909,15 +909,15 @@
       <workItem from="1424926562863" duration="1988000" />
       <workItem from="1424928753234" duration="25628000" />
       <workItem from="1425272920702" duration="4395000" />
-      <workItem from="1425277712088" duration="959000" />
+      <workItem from="1425277712088" duration="2127000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41160000" />
+    <option name="totallyTimeSpent" value="42328000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="618" y="44" width="1279" height="1044" extended-state="0" />
+    <frame x="600" y="76" width="1279" height="1044" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1340,8 +1340,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/config/routes.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.87827426" vertical-offset="15" max-vertical-offset="1065">
-          <caret line="39" column="35" selection-start-line="39" selection-start-column="35" selection-end-line="39" selection-end-column="35" />
+        <state vertical-scroll-proportion="0.6009245" vertical-offset="0" max-vertical-offset="1065">
+          <caret line="26" column="28" selection-start-line="26" selection-start-column="28" selection-end-line="26" selection-end-column="28" />
           <folding />
         </state>
       </provider>
