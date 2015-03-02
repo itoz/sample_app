@@ -9,95 +9,49 @@ describe "StaticPages" do
 
     describe "Static pages" do
 
+        subject { page }
+
         ##------------------------------------
         #「/static_pages/homeのHomeページにアクセスしたとき、
         ##------------------------------------
 
         describe "Home page" do
-
+            before { visit root_path }
             ##------------------------------------
             # “Sample App”という語が含まれていなければならない」
-            it "should have the content 'Sample App'" do
-                visit '/static_pages/home'
-                expect(page).to have_content('Sample App')
-            end
-            # it "should have the title Home" do
-            #     visit '/static_pages/home'
-            #     expect(page).to have_title("#{base_title} | Home")
-            # end
-
-            it "should have the base title" do
-                visit '/static_pages/home'
-                expect(page).to have_title("Ruby on Rails Tutorial Sample App")
-            end
-
-            it "should not have a custom page title" do
-                visit '/static_pages/home'
-                expect(page).not_to have_title('| Home')
-            end
+            it { should have_content('Sample App') }
+            it { should have_title(full_title('')) }
+            it { should_not have_title('| Home') }
         end
-
 
         ##------------------------------------
         #「/static_pages/helpのHelpページにアクセスしたとき、
         ##------------------------------------
         describe "Help page" do
+            before { visit help_path }
+            it { should have_content('Help') } # “Help”という語が含まれていなければならない」
+            it { should have_title(full_title('Help'))} # title にHelpがある
 
-
-            ##------------------------------------
-            # “Sample App”という語が含まれていなければならない」
-            it "should have the content 'Help'" do
-                visit '/static_pages/help'
-                expect(page).to have_content('Help')
-            end
-
-            ##------------------------------------
-            # title にHelpがある
-            it "should have the title Help" do
-                visit '/static_pages/help'
-                expect(page).to have_title("#{base_title} | Help")
-            end
         end
-
 
         ##------------------------------------
         #「/static_pages/aboutにアクセスしたとき
         ##------------------------------------
-
         describe "About page" do
-            ##------------------------------------
-            # About Usという文字列が、 含まれていなければならない」
-            it "should have the content 'About Us'" do
-                visit '/static_pages/about'
-                expect(page).to have_content('About Us')
-            end
-
-
-            ##------------------------------------
-            # title にAboutがある
-            it "should have the title About" do
-                visit '/static_pages/about'
-                expect(page).to have_title("#{base_title} | About Us")
-            end
+            before { visit about_path }
+            it { should have_content('About Us') }
+            it { should have_title(full_title('About Us')) }
         end
 
         ##------------------------------------
         #「/static_pages/contact ページにアクセスしたとき、
         ##------------------------------------
         describe "Contact Page" do
-            it "should have the content Contact" do
-                visit '/static_pages/contact'
-                expect(page).to have_content("Contact")
-            end
-            it "shoud have the title Contact" do
-                visit "/static_pages/contact"
-                expect(page).to have_title("#{base_title} | Contact")
-            end
+            before { visit contact_path }
+            it { should have_content('Contact') }
+            it { should have_title(full_title('Contact')) }
         end
-
     end
-
-
     # describe "GET /static_pages" do
     #   it "works! (now write some real specs)" do
     # Run the generator again with the --webrat flag if you want to use webrat methods/matchers
