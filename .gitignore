@@ -30,5 +30,6 @@ doc/
 bundle_bin/
 
 .idea/*
-.idea/workspace.xml
+
 *.idea
+.idea/workspace.xml
