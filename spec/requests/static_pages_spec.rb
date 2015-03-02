@@ -80,4 +80,6 @@ describe "StaticPages" do
     # get static_pages_index_path
     # response.status.should be(200)
     # end
+
+
 end
