@@ -22,8 +22,13 @@ doc/
 .DS_Store
 **/.DS_Store
 
-.idea/*
+
+*.idea/*
 .secret
 **/*.secret
 
 bundle_bin/
+
+.idea/*
+.idea/workspace.xml
+*.idea
