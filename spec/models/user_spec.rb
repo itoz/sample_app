@@ -89,13 +89,14 @@ describe User do
     it {should be_invalid}
   end
 
-  #無効なメールアドレスを弾くかどうか
-
+  #ユーザーの電子メールの形式が無効です
+  # > 無効なメールアドレスを弾くかどうか
   describe "when email format is invalid" do
 
+    #無効であるべき
     it "should be invalid" do
       addresses = %w[user@foo,com user_at_foo.org example.user@foo.
-        foo@bar_baz.com foo@bar+baz.com]
+        foo@bar_baz.com foo@bar+baz.com foo@bar..com]
       addresses.each do |invalide_address|
         @user.email = invalide_address
         expect(@user).not_to be_valid
@@ -112,6 +113,22 @@ describe User do
         expect(@user).to be_valid
       end
     end
+  end
+
+
+  #混在ケースと電子メールアドレスを記述
+  # メールアドレスが小文字に変換されるか
+  describe "email address with mixed case" do
+    let (:mixed_case_email) {"Foo@ExAmple.CoM"}
+    #それはすべて小文字として保存する必要があります
+    it "should be saved as all lower-case" do
+      @user.email = mixed_case_email
+      @user.save
+      expect(@user.reload.email).to eq mixed_case_email.downcase
+
+    end
+
+
   end
 
   #大文字小文字を区別しない、重複するメールアドレスの拒否のテスト

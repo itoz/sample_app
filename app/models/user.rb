@@ -3,10 +3,12 @@ class User < ActiveRecord::Base
     #before_save はactiveRecordのコールバック
     #データベースのアダプタが常に大文字小文字を区別するインデックスを使っているとは限らないので、
     #保存するまえに小文字にする
-    before_save {self.email = email.downcase}
+    before_save {email.downcase!}
 
     validates :name, presence: true ,length: { maximum: 50 }
-    VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+    # VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+    VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
+
     # uniqueness :true
     # 一意かどうか
 
