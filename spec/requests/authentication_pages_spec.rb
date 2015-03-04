@@ -11,11 +11,57 @@ describe "AuthenticationPages" do
 
   subject { page }
 
+  #認証
   describe "Authentication" do
     before {visit signin_path}
     it{should have_content("Sign in")}
     it{should have_title("Sign in")}
+
+
+
+    #承認
+    describe "authorization" do
+
+      #サインインしていないユーザーがいずれかのアクションにアクセスしようとしたときには、単にサインインページに移動することを確認
+      describe "for non-signed-in users" do
+        #ユーザー作成
+        let(:user) { FactoryGirl.create(:user) }
+
+        #ユーザーコントローラー
+        describe "in the Users controller" do
+
+          # エディットページに遷移
+          describe "visiting the edit page" do
+            before {visit edit_user_path(user)}
+            #サインインページになるか確認
+            it {should have_title("Sign in")}
+          end
+
+          #アップデート
+          describe "submitting to the update action" do
+            #visitではなくpatchメソッドを利用している
+            #このリクエストはUsersコントローラのupdateアクションにルーティングされる
+            #(訳注: updateは純粋に更新処理を行うアクションであって、そこで何かを表示するわけではないので)、
+            # Capybaraでは対応できません。そして、editページを表示してもeditアクションの認可テストはできますが、
+            # updateアクションの認可テストはできません。こうした事情から、
+            # updateアクション自体をテストするにはリクエストを直接発行する以外に方法がないため
+            before {patch user_path(user)}
+            #特定　
+            #patch get post delete を使うと、responseオブジェクトにアクセスできるようになる
+            specify {expect(response).to redirect_to(signin_path)}
+
+          end
+
+        end
+
+      end
+
+
+    end
+
   end
+
+
 
   #サインイン失敗のテスト
   describe "sign in" do
@@ -36,7 +82,7 @@ describe "AuthenticationPages" do
 
     #サインイン成功
     describe "with valid information" do
-      let(:user){Factory.Girl.create(:user)}
+      let(:user){FactoryGirl.create(:user)}
 
       before do
         fill_in "Email", with: user.email.upcase
@@ -45,19 +91,15 @@ describe "AuthenticationPages" do
       end
       it { should have_title(user.name) }
       it { should have_link("Profile", href: user_path(user)) }
-      it { should have_link("Sign out", href: signout_path) }
+      it { should have_link('Settings',href: edit_user_path(user)) }
+      it { should have_link("Sign out",href: signout_path) }
       it { should_not have_link("Sign in", href: signin_path) }
 
       #ユーザーのサインアウトをテストする。
       describe "followed by signout" do
         before {click_link "Sign out"}
         it{should have_link("Sign in")}
-
       end
-
-
     end
   end
-
-
 end
