@@ -48,7 +48,7 @@ describe "UserPages" do
 
 
 
-    #登録の成功
+    #サインアップの成功
 
     describe "with valid information" do
       before do
@@ -67,10 +67,16 @@ describe "UserPages" do
       describe "after saving the user" do
         before { click_button submit }
         let(:user) { User.find_by(email: "user@example.com") }
+        # 新規ユーザー登録後にユーザーがサインインしたことをテストする
+        it { should have_link("Sign out") }
         it { should have_title(user.name) }
         it { should have_selector("div.alert.alert-success", text: "Welcome") }
+
       end
+
+
     end
+
 
 
   end

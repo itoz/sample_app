@@ -6,7 +6,10 @@ class SessionsController < ApplicationController
     end
 
     def create
-        user = User.find_by(email : params[:session][:email].downcase)
+        user = User.find_by(email: params[:session][:email].downcase)
+
+        #Emailが一致するものが見つかった（ユーザーがいた）
+
         if user && user.authenticate(params[:session][:password])
 
             #ユーザーをサインインさせ　ユーザーページにリダイレクト
@@ -23,8 +26,10 @@ class SessionsController < ApplicationController
     end
 
     def destroy
-
+        sign_out
+        redirect_to root_url
     end
+
 
 
 end

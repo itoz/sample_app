@@ -18,7 +18,7 @@ describe "AuthenticationPages" do
   end
 
   #サインイン失敗のテスト
-  describe "sigin in" do
+  describe "sign in" do
 
     before {visit signin_path}
 
@@ -47,6 +47,15 @@ describe "AuthenticationPages" do
       it { should have_link("Profile", href: user_path(user)) }
       it { should have_link("Sign out", href: signout_path) }
       it { should_not have_link("Sign in", href: signin_path) }
+
+      #ユーザーのサインアウトをテストする。
+      describe "followed by signout" do
+        before {click_link "Sign out"}
+        it{should have_link("Sign in")}
+
+      end
+
+
     end
   end
 
