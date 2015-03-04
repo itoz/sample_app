@@ -132,6 +132,13 @@ describe User do
 
   end
 
+  #記憶トークンが有効である (空欄のない) ことをテストする
+  describe "remember token" do
+    before {@user.save}
+    its(:remember_token) {should_not be_blank}
+  end
+
+
   #大文字小文字を区別しない、重複するメールアドレスの拒否のテスト
   describe "when email address is already taken" do
     before do

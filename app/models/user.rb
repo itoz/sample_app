@@ -5,6 +5,10 @@ class User < ActiveRecord::Base
     #保存するまえに小文字にする
     before_save {self.email = email.downcase}
 
+    #ユーザーモデルが生成される前に確実にトークンを生成するコールバック
+    before_create :create_remember_token
+
+
     validates :name, presence: true ,length: { maximum: 50 }
     VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
 
@@ -23,6 +27,28 @@ class User < ActiveRecord::Base
 
     validates :password, length: { minimum: 6 }
 
+    #-------------------------------
+    #クラスメソッド
+    #-------------------------------
+
+    #トークン生成
+    def User.new_remember_token
+        SecureRandom.urlsafe_base64
+    end
+
+    #トークン暗号化
+    def User.encrypt(token)
+        Digest::SHA1.hexdigest(token.to_s)
+    end
+
+    #-------------------------------
+    #プライベートメソッド
+    #-------------------------------
+
+    private
+        def create_remember_token
+            self.remember_token = User.encrypt(User.new_remember_token)
+        end
 
 end
 
