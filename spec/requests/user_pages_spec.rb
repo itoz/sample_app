@@ -48,7 +48,6 @@ describe "UserPages" do
 
 
 
-
     #登録の成功
 
     describe "with valid information" do
