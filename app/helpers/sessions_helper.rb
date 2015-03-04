@@ -19,7 +19,7 @@ module SessionsHelper
     end
 
     def signed_in?
-        !current_user.nil?
+        !self.current_user.nil?
     end
 
     #------------------------
