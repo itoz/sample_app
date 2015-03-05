@@ -5,10 +5,14 @@ class UsersController < ApplicationController
     #signed_in_userメソッドを定義してbefore_action :signed_in_userという形式で呼び出します
     before_action :signed_in_user, only: [:edit, :update]
 
+    #正しいユーザーのアクセスかチェック、
+    #正しくない場合、ルートへリダイレクト
+    #このアクション内で、@user = User.find(params[:id])　が実行されるので、edit update内でその記述は必要ない
+    before_action :correct_user, only:[:edit ,:update]
+
+
     def show
         @user = User.find(params[:id])
-        # @user = User.find_by(id: params[:id])
-        # @user = User.find_by_id(params[:id])
     end
 
     def new
@@ -17,7 +21,6 @@ class UsersController < ApplicationController
 
 
     def edit
-        @user = User.find(params[:id])
     end
 
 
@@ -64,5 +67,12 @@ class UsersController < ApplicationController
             # end
             #上記を簡素化
             redirect_to signin_url ,notice: "Please sign in." unless signed_in?
+        end
+
+        # 正しいユーザーか
+        def correct_user
+            @user = User.find(params[:id])
+            #current_user?はsession_helper.rbにある
+            redirect_to(root_path) unless current_user?(@user)
         end
 end

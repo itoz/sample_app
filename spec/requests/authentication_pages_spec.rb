@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe "AuthenticationPages" do
+
   # describe "GET /authentication_pages" do
   #   it "works! (now write some real specs)" do
   #     # Run the generator again with the --webrat flag if you want to use webrat methods/matchers
@@ -56,6 +57,34 @@ describe "AuthenticationPages" do
 
       end
 
+
+      #他のユーザーがEditやUpdateにアクセス出来ないか確認
+      describe "as wrong user" do
+        #正しいユーザー
+        let(:user) {FactoryGirl.create(:user)}
+        #他のユーザー
+        let(:wrong_user) {FactoryGirl.create(:user,email: "wrong@example.om")}
+        #Capybaraをつかわないでサインインする
+        before {sign_in user,no_capybara: true}
+
+        #エディット
+        describe "submitting a GET request to the Users#edit action" do
+          before {get edit_user_path(wrong_user)}
+          #タイトルがEditUserになっていないか確認
+          specify {expect(response.body).not_to match(full_title("Edit User"))}
+          #ルートURLにリダイレクトされるか確認
+          specify {expect(response).to redirect_to(root_path)}
+        end
+
+
+        describe "submitting a PATCH request to the User#update action" do
+          before {patch user_path(wrong_user)}
+          #ルートURLにリダイレクトされるか確認
+          specify {expect(response).to redirect_to(root_path)}
+        end
+
+
+      end
 
     end
 
