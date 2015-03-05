@@ -5,16 +5,23 @@ class SessionsController < ApplicationController
 
     end
 
+
+    # sign_in_pathにアクセス
+
     def create
         user = User.find_by(email: params[:session][:email].downcase)
 
-        #Emailが一致するものが見つかった（ユーザーがいた）
+        # Emailが一致するものが見つかった（ユーザーがいた）
 
         if user && user.authenticate(params[:session][:password])
 
-            #ユーザーをサインインさせ　ユーザーページにリダイレクト
+            #ユーザーをサインインさせ、
             sign_in user
-            redirect_to user
+
+            #ユーザーページにリダイレクト
+            #　redirect_back_orはsession_helperに定義した、
+            #　フレンドリーフォワーディングの場合にはそのURLに飛ばすためのメソッド
+            redirect_back_or user
 
         else
 
@@ -24,6 +31,8 @@ class SessionsController < ApplicationController
 
         end
     end
+
+    #sign_out_path にアクセスがあった
 
     def destroy
         sign_out

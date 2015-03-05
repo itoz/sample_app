@@ -1,12 +1,17 @@
 class UsersController < ApplicationController
 
 
+    #----------------------------
+    # Edit/Updateへのアクセスはサインインが必要。
+    #----------------------------
+
+    #サインインの確認。サインイン指定なければ、サインインページにリダイレクト。
     #EditとUpdate時は、ユーザーにサインインを要求するために
     #signed_in_userメソッドを定義してbefore_action :signed_in_userという形式で呼び出します
     before_action :signed_in_user, only: [:edit, :update]
 
     #正しいユーザーのアクセスかチェック、
-    #正しくない場合、ルートへリダイレクト
+    #サインインしているが正しくないユーザーの場合、ルートへリダイレクト
     #このアクション内で、@user = User.find(params[:id])　が実行されるので、edit update内でその記述は必要ない
     before_action :correct_user, only:[:edit ,:update]
 
@@ -39,18 +44,27 @@ class UsersController < ApplicationController
     def create
         @user = User.new(user_params)
         if @user.save
-
-            #保存の成功
+            #-------------
+            # 作成/保存の成功
+            #-------------
 
             #サインイン
             sign_in @user
-
             flash[:success] = "Welcome to the Sample App!"
+
+            #リダイレクト
             redirect_to @user
+
         else
             render 'new'
         end
     end
+
+
+    #--------------------
+    # private actions
+    #--------------------
+
 
     private
 
@@ -59,14 +73,19 @@ class UsersController < ApplicationController
             params.require(:user).permit(:name,:email,:password,:password_confirmation)
         end
 
+        #--------------------
+        # before action
+        #--------------------
         #Edit,Update時のサインインしていない場合のリダイレクト
         def signed_in_user
-            # unless signed_in?
-            #     flash[:notice] = "Please sign in."
-            #     redirect_to signin_url
-            # end
-            #上記を簡素化
-            redirect_to signin_url ,notice: "Please sign in." unless signed_in?
+            #signed_inはsession_helperに定義されている
+            unless signed_in?
+                #フレンドリーフォワーディングのため、
+                # アクセスされたURLをRailsのsession機能に保存しておく
+               store_location
+               flash[:notice] = "Please sign in."
+                redirect_to signin_url
+            end
         end
 
         # 正しいユーザーか

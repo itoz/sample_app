@@ -23,10 +23,36 @@ describe "AuthenticationPages" do
     #承認
     describe "authorization" do
 
-      #サインインしていないユーザーがいずれかのアクションにアクセスしようとしたときには、単にサインインページに移動することを確認
+      #サインインしていないユーザー関連の確認
       describe "for non-signed-in users" do
         #ユーザー作成
         let(:user) { FactoryGirl.create(:user) }
+
+
+
+        #フレンドリーフォワーディング
+
+
+        describe "when attempting to visit a protected page" do
+
+          #エディとページにアクセスし、
+          before do
+            #エディットページにいきなりアクセス、
+            visit edit_user_path(user)
+            #するとサインインページにリダイレクトされるはずなのでサインイン
+            fill_in "Email" ,with: user.email
+            fill_in "Password" ,with: user.password
+            click_button "Sign in"
+          end
+
+          describe "after sign in"  do
+            #サインイン後エディットページにリダイレクトされるかどうか
+            it "should render the desired protected page" do
+              expect(page).to have_title("Edit user")
+            end
+          end
+
+        end
 
         #ユーザーコントローラー
         describe "in the Users controller" do
@@ -34,11 +60,11 @@ describe "AuthenticationPages" do
           # エディットページに遷移
           describe "visiting the edit page" do
             before {visit edit_user_path(user)}
-            #サインインページになるか確認
+            # サインインページにリダイレクトされることを確認
             it {should have_title("Sign in")}
           end
 
-          #アップデート
+          #アップデート　PATCH
           describe "submitting to the update action" do
             #visitではなくpatchメソッドを利用している
             #このリクエストはUsersコントローラのupdateアクションにルーティングされる
@@ -49,11 +75,15 @@ describe "AuthenticationPages" do
             before {patch user_path(user)}
             #特定　
             #patch get post delete を使うと、responseオブジェクトにアクセスできるようになる
+            # サインインページにリダイレクトされることを確認
             specify {expect(response).to redirect_to(signin_path)}
 
           end
 
         end
+
+
+
 
       end
 
