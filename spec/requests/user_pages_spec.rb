@@ -5,6 +5,28 @@ describe "UserPages" do
     subject { page }
 
 
+    #indexページ
+    describe "index" do
+
+        #３人のユーザー作成
+        before do
+            sign_in FactoryGirl.create(:user)
+            FactoryGirl.create(:user,name: "Bob", email: "bob@example.com")
+            FactoryGirl.create(:user,name: "Ben", email: "ben@example.com")
+            visit users_path
+        end
+        #All usersページが表示されているか
+        it { should have_title("All users") }
+        it { should have_content("All users") }
+
+        #それぞれのユーザー名がliに表示されているか
+        it "should list each user" do
+            User.all.each do |user|
+                expect(page).to have_selector("li" , text:user.name)
+            end
+        end
+    end
+
     #プロフィールページの表示
     describe "profile page" do
         let(:user) { FactoryGirl.create(:user) }

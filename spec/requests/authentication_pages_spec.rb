@@ -28,11 +28,7 @@ describe "AuthenticationPages" do
         #ユーザー作成
         let(:user) { FactoryGirl.create(:user) }
 
-
-
         #フレンドリーフォワーディング
-
-
         describe "when attempting to visit a protected page" do
 
           #エディとページにアクセスし、
@@ -45,12 +41,14 @@ describe "AuthenticationPages" do
             click_button "Sign in"
           end
 
+          #サインイン後エディットページにリダイレクトされるかどうか
           describe "after sign in"  do
-            #サインイン後エディットページにリダイレクトされるかどうか
             it "should render the desired protected page" do
               expect(page).to have_title("Edit user")
             end
           end
+
+
 
         end
 
@@ -80,6 +78,11 @@ describe "AuthenticationPages" do
 
           end
 
+          #indexにアクセスするとサインインにリダイレクトされるかどうか
+          describe "visiting the user index" do
+            before {visit users_path}
+            it {should have_title("Sign in")}
+          end
         end
 
 
@@ -114,6 +117,8 @@ describe "AuthenticationPages" do
         end
 
 
+
+
       end
 
     end
@@ -121,8 +126,9 @@ describe "AuthenticationPages" do
   end
 
 
-
+  #---------------------
   #サインイン失敗のテスト
+  #---------------------
   describe "sign in" do
 
     before {visit signin_path}
@@ -139,19 +145,27 @@ describe "AuthenticationPages" do
       end
     end
 
-    #サインイン成功
+    #---------------------
+    # サインイン成功の確認
+    #---------------------
     describe "with valid information" do
       let(:user){FactoryGirl.create(:user)}
-
       before do
         fill_in "Email", with: user.email.upcase
         fill_in "Password", with: user.password
         click_button "Sign in"
       end
+      #タイトルにユーザー名があるか
       it { should have_title(user.name) }
+      #ユーザー一覧へのリンクがあるか
+      it { should have_link("Users", href: users_path) }
+      #プロフィール へのリンクがあるか
       it { should have_link("Profile", href: user_path(user)) }
-      it { should have_link('Settings',href: edit_user_path(user)) }
-      it { should have_link("Sign out",href: signout_path) }
+      #設定画面 へのリンクがあるか
+      it { should have_link('Settings', href: edit_user_path(user)) }
+      #サインアウト へのリンクがあるか
+      it { should have_link("Sign out", href: signout_path) }
+      #サインイン へのリンクがないか
       it { should_not have_link("Sign in", href: signin_path) }
 
       #ユーザーのサインアウトをテストする。

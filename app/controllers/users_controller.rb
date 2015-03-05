@@ -2,19 +2,25 @@ class UsersController < ApplicationController
 
 
     #----------------------------
-    # Edit/Updateへのアクセスはサインインが必要。
+    # Index/Edit/Updateへのアクセスはサインインが必要。
     #----------------------------
-
     #サインインの確認。サインイン指定なければ、サインインページにリダイレクト。
     #EditとUpdate時は、ユーザーにサインインを要求するために
     #signed_in_userメソッドを定義してbefore_action :signed_in_userという形式で呼び出します
-    before_action :signed_in_user, only: [:edit, :update]
+    before_action :signed_in_user, only: [:index,:edit, :update]
 
-    #正しいユーザーのアクセスかチェック、
+
+    #----------------------------
+    # Edit/Updateは正しいユーザーのアクセスかチェック、
+    #----------------------------
     #サインインしているが正しくないユーザーの場合、ルートへリダイレクト
-    #このアクション内で、@user = User.find(params[:id])　が実行されるので、edit update内でその記述は必要ない
+    #このbeforeアクション内で、@user = User.find(params[:id])　が実行されるので、edit update内でその記述は必要ない
     before_action :correct_user, only:[:edit ,:update]
 
+
+    def index
+        @users = User.all
+    end
 
     def show
         @user = User.find(params[:id])
