@@ -6,7 +6,6 @@
 # $ rake db:test:prepare
 #
 #
-
 namespace :db do
 
     desc "Fill database with sample data"
@@ -24,7 +23,7 @@ namespace :db do
         #ランダムなユーザーを大量に生成
         99.times do |n|
             name = Faker::Name.name
-            email = "example_#{n+1}@railstutorial.jp"
+            email = "example#{n+1}@railstutorial.jp"
             password ="password"
             User.create!(
                 name: name,

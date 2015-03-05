@@ -129,6 +129,7 @@
     <orderEntry type="library" scope="PROVIDED" name="arel (v4.0.2, rbenv: 2.0.0-p598) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bcrypt-ruby (v3.1.2, rbenv: 2.0.0-p598) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bootstrap-sass (v2.3.2.0, rbenv: 2.0.0-p598) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="bootstrap-will_paginate (v0.0.9, rbenv: 2.0.0-p598) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="builder (v3.1.4, rbenv: 2.0.0-p598) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bundler (v1.8.3, rbenv: 2.0.0-p598) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="capybara (v2.1.0, rbenv: 2.0.0-p598) [gem]" level="application" />
@@ -204,6 +205,7 @@
     <orderEntry type="library" scope="PROVIDED" name="tzinfo (v0.3.43, rbenv: 2.0.0-p598) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="uglifier (v2.1.1, rbenv: 2.0.0-p598) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="websocket (v1.0.7, rbenv: 2.0.0-p598) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="will_paginate (v3.0.4, rbenv: 2.0.0-p598) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="xpath (v2.0.0, rbenv: 2.0.0-p598) [gem]" level="application" />
   </component>
   <component name="RModuleSettingsStorage">

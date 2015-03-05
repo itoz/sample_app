@@ -4,30 +4,45 @@ describe "UserPages" do
 
     subject { page }
 
-
+    #---------------------
     #indexページ
+    #---------------------
     describe "index" do
 
-        #３人のユーザー作成
+        #3人のユーザー作成
         before do
             sign_in FactoryGirl.create(:user)
             FactoryGirl.create(:user,name: "Bob", email: "bob@example.com")
             FactoryGirl.create(:user,name: "Ben", email: "ben@example.com")
             visit users_path
         end
+
         #All usersページが表示されているか
         it { should have_title("All users") }
         it { should have_content("All users") }
 
-        #それぞれのユーザー名がliに表示されているか
-        it "should list each user" do
-            User.all.each do |user|
-                expect(page).to have_selector("li" , text:user.name)
+        #ページネーションテスト
+        describe "pagination" do
+
+            #30のサンプルユーザー作成
+            before(:all) { 30.times { FactoryGirl.create(:user) } }
+
+            #テストが終わったら破棄
+            after(:all) {User.delete_all}
+
+            #それぞれのユーザー名がliに表示されているか
+            it "should list each user" do
+                # User.all.each do |user|
+                User.paginate(page: 1).each do |user|
+                    expect(page).to have_selector("li", text: user.name)
+                end
             end
         end
     end
 
+    #---------------------
     #プロフィールページの表示
+    #---------------------
     describe "profile page" do
         let(:user) { FactoryGirl.create(:user) }
         before { visit user_path(user) }
