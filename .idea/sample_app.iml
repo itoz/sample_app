@@ -146,6 +146,7 @@
     <orderEntry type="library" scope="PROVIDED" name="execjs (v2.3.0, rbenv: 2.0.0-p598) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="factory_girl (v4.2.0, rbenv: 2.0.0-p598) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="factory_girl_rails (v4.2.1, rbenv: 2.0.0-p598) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="faker (v1.1.2, rbenv: 2.0.0-p598) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ffi (v1.9.6, rbenv: 2.0.0-p598) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="formatador (v0.2.5, rbenv: 2.0.0-p598) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="gherkin (v2.12.2, rbenv: 2.0.0-p598) [gem]" level="application" />
