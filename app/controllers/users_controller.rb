@@ -7,7 +7,7 @@ class UsersController < ApplicationController
     #サインインの確認。サインイン指定なければ、サインインページにリダイレクト。
     #EditとUpdate時は、ユーザーにサインインを要求するために
     #signed_in_userメソッドを定義してbefore_action :signed_in_userという形式で呼び出します
-    before_action :signed_in_user, only: [:index,:edit, :update]
+    before_action :signed_in_user, only: [:index, :edit, :update]
 
 
     #----------------------------
@@ -21,6 +21,12 @@ class UsersController < ApplicationController
     # adminユーザーのみdestroyを許可
     #----------------------------
     before_action :admin_user, only: [:destroy]
+
+    #----------------------------
+    # サインインしているユーザーがcreate,newにアクセスする必要はないので、ルートにリダイレクトさせる
+    #----------------------------
+    before_action :signed_in_user_redirect,only: [:create, :new ]
+
 
     def index
         @users = User.paginate(page: params[:page])
@@ -69,9 +75,16 @@ class UsersController < ApplicationController
     end
 
     def destroy
-        User.find(params[:id]).destroy
-        flash[:success] = "user destroyed."
-        redirect_to users_url
+        #このメソッド自体管理者しか操作できないので、管理者かのチェックはしなくてよい
+        user = User.find(params[:id]).destroy
+        if current_user? user
+            #adminユーザーは自身を削除できない
+            redirect_to(root_path)
+        else
+            user.destroy
+            flash[:success] = "user destroyed."
+            redirect_to users_url
+        end
     end
 
 
@@ -96,8 +109,8 @@ class UsersController < ApplicationController
             unless signed_in?
                 #フレンドリーフォワーディングのため、
                 # アクセスされたURLをRailsのsession機能に保存しておく
-               store_location
-               flash[:notice] = "Please sign in."
+                store_location
+                flash[:notice] = "Please sign in."
                 redirect_to signin_url
             end
         end
@@ -113,4 +126,10 @@ class UsersController < ApplicationController
         def admin_user
             redirect_to(root_path) unless current_user.admin?
         end
+
+        def signed_in_user_redirect
+            redirect_to(root_path) unless current_user?(@user)
+        end
+
+
 end

@@ -5,12 +5,12 @@ describe "UserPages" do
     subject { page }
 
     #---------------------
-    #indexページ
+    # indexページ
     #---------------------
     describe "index" do
 
         #-------------------
-        #メインユーザー作成
+        # メインユーザー作成
         #-------------------
         let(:user) {FactoryGirl.create(:user)}
 
@@ -31,7 +31,7 @@ describe "UserPages" do
         it { should have_content("All users") }
 
         #-------------------
-        #ページネーションテスト
+        # ページネーションテスト
         #-------------------
         describe "pagination" do
 
@@ -59,6 +59,7 @@ describe "UserPages" do
             # delete リンクを持っていないことを確認
             #-------------------
             it { should_not have_link("delete") }
+
             describe "as an admin user" do
 
                 #-------------------
@@ -84,7 +85,6 @@ describe "UserPages" do
                     expect do
                         click_link("delete",match: :first)
                     end.to change(User, :count).by(-1)
-
                 end
 
                 #-------------------
@@ -92,8 +92,16 @@ describe "UserPages" do
                 #-------------------
                 it {should_not have_link("delete" ,href: user_path(admin))}
 
+                #-------------------
+                # [todo] adminが自分自身を削除できてしまわないか
+                #-------------------
+                it " adminが自分自身を削除できてしまわないか" do
+                    #click_linkで自分のリンクをクリック
+                    # click_link("delete",match: :first)
+                    #rootにリダイレクトされるか確認
+                    # it {expect(page).to have_content("Welcom")}
+                end
             end
-
         end
     end
 
@@ -105,19 +113,20 @@ describe "UserPages" do
         before { visit user_path(user) }
         it { should have_content(user.name) }
         it { should have_title(user.name) }
-
     end
 
+    #---------------------
     #サインアップページの表示
+    #---------------------
     describe "signup page" do
         before { visit signup_path }
         it { should have_content('Sign up') }
         it { should have_title(full_title("Sign up")) }
     end
 
-
+    #---------------------
     #サインアップ
-
+    #---------------------
     describe "signup" do
 
 
@@ -125,7 +134,8 @@ describe "UserPages" do
 
         let(:submit) { "Create my account" }
 
-        #登録の失敗
+        #---------------------
+        # 登録の失敗
         describe "with invalid information" do
             it "should not create a user" do
                 expect { click_button submit }.not_to change(User, :count)
@@ -140,6 +150,7 @@ describe "UserPages" do
         end
 
 
+        #---------------------
         #サインアップの成功
 
         describe "with valid information" do
@@ -147,11 +158,11 @@ describe "UserPages" do
                 fill_in "Name", with: "Example User"
                 fill_in "Email", with: "user@example.com"
                 fill_in "Password", with: "foobar"
-                fill_in "Confirmation", with: "foobar"
+                fill_in "Confirm", with: "foobar"
             end
+
             #カウントが1ふえる
             it "should create a user" do
-                # expect { click_button submit }.to change(User,:count).by(1)
                 expect { click_button submit }.to change(User, :count).by(1)
             end
 
@@ -163,13 +174,27 @@ describe "UserPages" do
                 it { should have_link("Sign out") }
                 it { should have_title(user.name) }
                 it { should have_selector("div.alert.alert-success", text: "Welcome") }
+            end
+
+            #[TODO] create newにはアクセスするとルートにリダイレクトされるか
+            describe "create NEWにアクセスするとルートにリダイレクトされるか" do
+
+                before do
+                    visit signup_path
+                end
+
+                describe "aa" do
+                    # it{expect(page).to have_content("Welcome")}
+                    # it { should have_content("Welcome") }
+                end
 
             end
 
-
         end
 
-        #編集ページ
+
+        #---------------------
+        # 編集ページ
 
         describe "edit" do
 
@@ -179,7 +204,7 @@ describe "UserPages" do
                  visit edit_user_path(user)
             end
 
-
+            # ページ表示確認
             describe "page" do
                 #タイトルがあるか
                 it { should have_content("Update your profile") }
@@ -222,13 +247,28 @@ describe "UserPages" do
             end
 
 
+            # web経由でadmin属性を変更できないことを確認
+            describe "forbidden attributes" do
 
+                #adminがtrueの送信用パラメータを作成
+                let (:params) do
+                    {user: {admin: true, password: user.password, password_confirmation: user.password }}
+                end
 
+                #admin login
+                before do
+                    #ログインし
+                    sign_in user,no_capybara: true
+                    #deleteメソッドにpatchを発行
+                    patch user_path(user),params
+                end
 
+                #adminに変更されていないことを確認
+                specify { expect(user.reload).not_to be_admin }
 
+            end
 
         end
 
     end
-
 end
