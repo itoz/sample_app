@@ -14,13 +14,14 @@ describe "AuthenticationPages" do
 
   #認証
   describe "Authentication" do
+
     before {visit signin_path}
     it{should have_content("Sign in")}
     it{should have_title("Sign in")}
 
-
-
+    #-----------------
     #承認
+    #-----------------
     describe "authorization" do
 
       #サインインしていないユーザー関連の確認
@@ -31,7 +32,7 @@ describe "AuthenticationPages" do
         #フレンドリーフォワーディング
         describe "when attempting to visit a protected page" do
 
-          #エディとページにアクセスし、
+          #編集ページにアクセスし、
           before do
             #エディットページにいきなりアクセス、
             visit edit_user_path(user)
@@ -86,12 +87,11 @@ describe "AuthenticationPages" do
         end
 
 
-
-
       end
 
-
+      #-----------------------
       #他のユーザーがEditやUpdateにアクセス出来ないか確認
+      #-----------------------
       describe "as wrong user" do
         #正しいユーザー
         let(:user) {FactoryGirl.create(:user)}
@@ -116,10 +116,24 @@ describe "AuthenticationPages" do
           specify {expect(response).to redirect_to(root_path)}
         end
 
-
-
-
       end
+
+      #-----------------------
+      # アドミンじゃないユーザーが、
+      #-----------------------
+      describe "as non-admin user" do
+        let(:user) { FactoryGirl.create(:user) }
+        let(:non_admin) { FactoryGirl.create(:user) }
+        #capybaraをつかわない。deleteを直接発行するから？
+        before { sign_in non_admin, no_capybara: true }
+        #他のユーザーを削除できてしまわないか確認
+        describe "submitting a DELETE request to the Users#destroy action" do
+
+          before {delete user_path(user)}
+          specify { expect(response).to redirect_to(root_path) }
+        end
+      end
+
 
     end
 

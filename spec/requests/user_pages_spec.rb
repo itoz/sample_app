@@ -9,19 +9,30 @@ describe "UserPages" do
     #---------------------
     describe "index" do
 
-        #3人のユーザー作成
+        #-------------------
+        #メインユーザー作成
+        #-------------------
+        let(:user) {FactoryGirl.create(:user)}
+
         before do
-            sign_in FactoryGirl.create(:user)
+            #メインサインイン
+            sign_in user
+            #2人のユーザー追加作成
             FactoryGirl.create(:user,name: "Bob", email: "bob@example.com")
             FactoryGirl.create(:user,name: "Ben", email: "ben@example.com")
+            #indexにアクセス
             visit users_path
         end
 
-        #All usersページが表示されているか
+        #-------------------
+        # All usersページが表示されているか
+        #-------------------
         it { should have_title("All users") }
         it { should have_content("All users") }
 
+        #-------------------
         #ページネーションテスト
+        #-------------------
         describe "pagination" do
 
             #30のサンプルユーザー作成
@@ -37,6 +48,52 @@ describe "UserPages" do
                     expect(page).to have_selector("li", text: user.name)
                 end
             end
+        end
+
+        #-------------------
+        # ユーザー削除機能の確認
+        #-------------------
+        describe "delete links" do
+
+            #-------------------
+            # delete リンクを持っていないことを確認
+            #-------------------
+            it { should_not have_link("delete") }
+            describe "as an admin user" do
+
+                #-------------------
+                #　アドミン作成
+                #-------------------
+                let(:admin) { FactoryGirl.create(:admin) }
+
+                before do
+                    #アドミンログイン
+                    sign_in admin
+                    visit users_path
+                end
+
+                #-------------------
+                # メインユーザーへのdeleteリンクが表示されていることを確認
+                #-------------------
+                it { should have_link("delete", href: user_path(User.first)) }
+
+                #-------------------
+                # アドミンがユーザーを削除できるか確認
+                #-------------------
+                it "should be able to delete another user" do
+                    expect do
+                        click_link("delete",match: :first)
+                    end.to change(User, :count).by(-1)
+
+                end
+
+                #-------------------
+                # admin自身には削除リンクが表示されていないか
+                #-------------------
+                it {should_not have_link("delete" ,href: user_path(admin))}
+
+            end
+
         end
     end
 

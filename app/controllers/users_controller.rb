@@ -17,6 +17,10 @@ class UsersController < ApplicationController
     #このbeforeアクション内で、@user = User.find(params[:id])　が実行されるので、edit update内でその記述は必要ない
     before_action :correct_user, only:[:edit ,:update]
 
+    #----------------------------
+    # adminユーザーのみdestroyを許可
+    #----------------------------
+    before_action :admin_user, only: [:destroy]
 
     def index
         @users = User.paginate(page: params[:page])
@@ -30,10 +34,8 @@ class UsersController < ApplicationController
         @user = User.new
     end
 
-
     def edit
     end
-
 
     def update
         @user = User.find(params[:id])
@@ -66,16 +68,22 @@ class UsersController < ApplicationController
         end
     end
 
+    def destroy
+        User.find(params[:id]).destroy
+        flash[:success] = "user destroyed."
+        redirect_to users_url
+    end
+
 
     #--------------------
     # private actions
     #--------------------
 
-
     private
 
         #Strong Parameter
         def user_params
+            #許可された属性リスト adminを含んではいけない
             params.require(:user).permit(:name,:email,:password,:password_confirmation)
         end
 
@@ -99,5 +107,10 @@ class UsersController < ApplicationController
             @user = User.find(params[:id])
             #current_user?はsession_helper.rbにある
             redirect_to(root_path) unless current_user?(@user)
+        end
+
+        #アドミンユーザーじゃなかったらルートにリダイレクト
+        def admin_user
+            redirect_to(root_path) unless current_user.admin?
         end
 end

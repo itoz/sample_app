@@ -15,10 +15,14 @@ namespace :db do
     # このなかでUser.createなどが実行できるようになる
     task populate: :environment do
 
-        #ユーザーを作成
+        #アドミンユーザーをひとり作成
         # ! をつけると、ユーザーが無効な場合にfalseを返すのではなく例外を発生させる
 
-        User.create!(name: "Example User", email: "example@railstutorial.jp", password: "foobar",password_confirmation: "foobar")
+        User.create!(name: "Example User",
+                     email: "itoz@itoz.jp",
+                     password: "aaaaaa",
+                     password_confirmation: "aaaaaa",
+                     admin: true)
 
         #ランダムなユーザーを大量に生成
         99.times do |n|
