@@ -21,5 +21,11 @@ FactoryGirl.define do
 
 
 
+    #以下のようにマイクロポスト用のファクトリーの定義にuserを含めるだけで、
+    # マイクロポストに関連付けられるユーザーのことがFactory Girlに伝わります
+    factory :microposts do
+        content "Loren ipsum"
+        user
+    end
 
 end

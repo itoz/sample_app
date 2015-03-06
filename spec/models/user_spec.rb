@@ -8,15 +8,16 @@ describe User do
 
   subject {@user}
 
-  it { should respond_to(:name) }
-  it { should respond_to(:email) }
-  it { should respond_to(:password_digest) }
-  it { should respond_to(:password) }
-  it { should respond_to(:password_confirmation) }
-  it { should respond_to(:remember_token) }
-  it { should respond_to(:authenticate) }
-  it { should respond_to(:admin) }
+  it{should respond_to(:name)}
+  it{should respond_to(:email)}
+  it{should respond_to(:password_digest)}
+  it{should respond_to(:password)}
+  it{should respond_to(:password_confirmation)}
+  it{should respond_to(:remember_token)}
+  it{should respond_to(:authenticate)}
+  it{should respond_to(:admin)}
 
+  it{should respond_to(:microposts)}
   it { should be_valid }
   it { should_not be_admin }
 
@@ -159,6 +160,83 @@ describe User do
     it { should_not be_valid }
   end
 
+
+
+  #マイクロポスト関連
+
+  describe "microposts associations" do
+
+
+
+    before {@user.save}
+
+    #let変数はlazy、つまり参照されたときにはじめて初期化されるため
+    # !をつける
+    #ここでは、マイクロポストを遅延することなく即座に作成する必要があります
+    #タイムスタンプが常に正しい順序で作成されるように
+    # かつ、
+    #@user.micropostsが空の状態が生じることのないように
+    #let!を使用すれば、対応する変数を強制的に即座に作成できます。
+    let! (:older_micropost) do
+      FactoryGirl.create(:microposts,user: @user,created_at: 1.day.ago)
+    end
+
+    let!(:newer_micropost) do
+      FactoryGirl.create(:microposts,user: @user,created_at: 1.hour.ago)
+    end
+
+    #
+    # 新しいポストが最初に来るか
+    #
+    it "should have the right microposts in the right order" do
+      #to_aで、Active Recordの "collection proxy" から、配列に変換している
+      expect(@user.microposts.to_a).to eq [newer_micropost,older_micropost]
+
+    end
+
+    #
+    # ユーザーが破棄されたらmicropostも破棄されるか
+    #  関連したマイクロポストを破棄する必要がある
+    #
+    it "should destroy associated microposts" do
+
+      #マイクロソフトのコピーを保持しておく
+      microposts = @user.microposts.to_a
+      #ユーザー削除
+      @user.destroy
+      #コピーが存在することを確認
+      expect(microposts).not_to be_empty
+      microposts.each do |micropost|
+        # マイクロポストIDでデータベースを検索し、なくなったことを確認
+        #whereメソッドは、レコードがない場合に空のオブジェクトを返すので多少テストが書きやすくなる
+        expect(Micropost.where(id: micropost.id)).to be_empty
+      end
+
+    end
+
+
+    #
+    # プロフィールページ
+    #
+    describe "profile page" do
+
+      #ユーザー作成
+      let(:user) {FactoryGirl.create(:user)}
+      #マイクロソフト作成
+      let!(:m1) {FactoryGirl.create(:microposts,user: user,content: "hoge")}
+      let!(:m2) {FactoryGirl.create(:microposts,user: user,content: "fuga")}
+
+
+      #ユーザーページアクセス
+      before {visit user_path(user)}
+
+      it {should have_content(m1.content)}
+      it {should have_content(m2.content)}
+      it {should have_content(user.microposts.count)}
+
+    end
+
+  end
 
 
 

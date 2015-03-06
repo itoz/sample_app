@@ -1,6 +1,10 @@
-class User < ActiveRecord::Base
+class User < ActiveRecord::base
 
-    #before_save はactiveRecordのコールバック
+    #マイクロポスト
+    #ユーザーが削除されたらマイクロソフトも削除される
+    has_many :microposts,dependent: :destroy
+
+    #before_save はactiverecordのコールバック
     #データベースのアダプタが常に大文字小文字を区別するインデックスを使っているとは限らないので、
     #保存するまえに小文字にする
     before_save {self.email = email.downcase}
@@ -10,15 +14,15 @@ class User < ActiveRecord::Base
 
 
     validates :name, presence: true ,length: { maximum: 50 }
-    VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
+    valid_email_regex = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
 
     # uniqueness :true
     # 一意かどうか
 
     # uniqueness: {case_sensitive false}
     #　大文字小文字を無視した一意性の検証
-    #  大文字と小文字で、同じメアドが来てもOKとする
-    validates :email, presence: true, format: { with: VALID_EMAIL_REGEX },
+    #  大文字と小文字で、同じメアドが来てもokとする
+    validates :email, presence: true, format: { with: valid_email_regex },
         uniqueness: {case_sensitive:false}
 
     #パスワード関連
@@ -32,13 +36,13 @@ class User < ActiveRecord::Base
     #-------------------------------
 
     #トークン生成
-    def User.new_remember_token
-        SecureRandom.urlsafe_base64
+    def user.new_remember_token
+        securerandom.urlsafe_base64
     end
 
     #トークン暗号化
-    def User.encrypt(token)
-        Digest::SHA1.hexdigest(token.to_s)
+    def user.encrypt(token)
+        digest::sha1.hexdigest(token.to_s)
     end
 
     #-------------------------------
@@ -47,7 +51,7 @@ class User < ActiveRecord::Base
 
     private
         def create_remember_token
-            self.remember_token = User.encrypt(User.new_remember_token)
+            self.remember_token = user.encrypt(user.new_remember_token)
         end
 
 end
