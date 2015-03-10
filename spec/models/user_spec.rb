@@ -16,8 +16,9 @@ describe User do
   it{should respond_to(:remember_token)}
   it{should respond_to(:authenticate)}
   it{should respond_to(:admin)}
-
   it{should respond_to(:microposts)}
+  it{should respond_to(:feed)}
+
   it { should be_valid }
   it { should_not be_admin }
 
@@ -166,8 +167,6 @@ describe User do
 
   describe "microposts associations" do
 
-
-
     before {@user.save}
 
     #let変数はlazy、つまり参照されたときにはじめて初期化されるため
@@ -178,11 +177,11 @@ describe User do
     #@user.micropostsが空の状態が生じることのないように
     #let!を使用すれば、対応する変数を強制的に即座に作成できます。
     let! (:older_micropost) do
-      FactoryGirl.create(:microposts,user: @user,created_at: 1.day.ago)
+      FactoryGirl.create(:micropost,user: @user,created_at: 1.day.ago)
     end
 
     let!(:newer_micropost) do
-      FactoryGirl.create(:microposts,user: @user,created_at: 1.hour.ago)
+      FactoryGirl.create(:micropost,user: @user,created_at: 1.hour.ago)
     end
 
     #
@@ -200,11 +199,15 @@ describe User do
     #
     it "should destroy associated microposts" do
 
-      #マイクロソフトのコピーを保持しておく
+      #マイクロポストのコピーを保持しておく
+      # microposts = @user.microposts.to_a
+      # #ユーザー削除
+      # @user.destroy
+      # #コピーが存在することを確認
+      # expect(microposts).not_to be_empty
+      # microposts.each do |micropost|]
       microposts = @user.microposts.to_a
-      #ユーザー削除
       @user.destroy
-      #コピーが存在することを確認
       expect(microposts).not_to be_empty
       microposts.each do |micropost|
         # マイクロポストIDでデータベースを検索し、なくなったことを確認
@@ -222,10 +225,9 @@ describe User do
 
       #ユーザー作成
       let(:user) {FactoryGirl.create(:user)}
-      #マイクロソフト作成
-      let!(:m1) {FactoryGirl.create(:microposts,user: user,content: "hoge")}
-      let!(:m2) {FactoryGirl.create(:microposts,user: user,content: "fuga")}
-
+      #マイクロポスト作成
+      let!(:m1) {FactoryGirl.create(:micropost,user: user,content: "hoge")}
+      let!(:m2) {FactoryGirl.create(:micropost,user: user,content: "fuga")}
 
       #ユーザーページアクセス
       before {visit user_path(user)}
@@ -236,8 +238,22 @@ describe User do
 
     end
 
-  end
 
+    describe "status" do
+
+      let(:unfollowed_post)do
+        FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
+      end
+
+      #与えられた要素が配列に含まれているかどうかをチェックするinclude?メソッドを使用しています
+      its(:feed) {should include(newer_micropost)}
+      its(:feed) {should include(older_micropost)}
+      its(:feed) {should_not include(unfollowed_post)}
+
+
+    end
+
+  end
 
 
 end

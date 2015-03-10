@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'spork'
-
+require 'factory_girl_rails'
 Spork.prefork do
 
 
@@ -8,7 +8,7 @@ Spork.prefork do
   require File.expand_path("../../config/environment", __FILE__)
   require 'rspec/rails'
   require 'rspec/autorun'
-  require 'factory_girl_rails'
+  # require 'factory_girl_rails'
 
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
@@ -19,7 +19,7 @@ Spork.prefork do
   ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
   RSpec.configure do |config|
-    # == Mock Framework
+    # == Mock Framework_micropost
     #
     # If you prefer to use mocha, flexmock or RR,
     # uncomment the appropriate line:

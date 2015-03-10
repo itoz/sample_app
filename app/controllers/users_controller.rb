@@ -104,17 +104,7 @@ class UsersController < ApplicationController
         #--------------------
         # before action
         #--------------------
-        #Edit,Update時のサインインしていない場合のリダイレクト
-        def signed_in_user
-            #signed_inはsession_helperに定義されている
-            unless signed_in?
-                #フレンドリーフォワーディングのため、
-                # アクセスされたURLをRailsのsession機能に保存しておく
-                store_location
-                flash[:notice] = "Please sign in."
-                redirect_to signin_url
-            end
-        end
+
 
         # 正しいユーザーか
         def correct_user

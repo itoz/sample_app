@@ -10,21 +10,41 @@ describe "StaticPages" do
         subject { page }
 
         shared_examples_for "all static pages" do
-            it {should have_content(heading)}
-            it {should have_title(full_title(page_title))}
+            it { should have_content(heading) }
+            it { should have_title(full_title(page_title)) }
         end
 
         ##------------------------------------
         #「/static_pages/homeのHomeページにアクセスしたとき、
         ##------------------------------------
         describe "Home page" do
-            before { visit root_path }
+
+            #サインインユーザー
+            describe "for signed-in users" do
+                let (:user) {FactoryGirl.create(:user)}
+                before do
+                    FactoryGirl.create(:micropost, user: user, content: "Lorem ipsim")
+                    FactoryGirl.create(:micropost, user: user, content: "Dolor sit amet")
+                    sign_in user
+                    visit root_path
+                end
+
+                it "should render the user's feed" do
+                    user.feed.each do |item|
+                        #各フィード項目が固有のCSS idを持つことを前提
+                        expect(page).to have_selector("li##{item.id}", text: item.content)
+                    end
+                end
+            end
+
             ##------------------------------------
             # “Sample App”という語が含まれていなければならない」
             let (:heading) { "Sample App" }
             let (:page_title) { '' }
             it_should_behave_like "all static pages"
             it { should_not have_title('| Home') }
+
+
         end
 
         ##------------------------------------

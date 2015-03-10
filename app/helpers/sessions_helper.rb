@@ -30,6 +30,20 @@ module SessionsHelper
         cookies.delete(:remember_token)
     end
 
+    #------------------------
+    # サインインユーザーの確認。サインインしていなかったらリダイレクト
+    #------------------------
+    def signed_in_user
+        #signed_inはsession_helperに定義されている
+        unless signed_in?
+            #フレンドリーフォワーディングのため、
+            # アクセスされたURLをRailsのsession機能に保存しておく
+            store_location
+            flash[:notice] = "Please sign in."
+            redirect_to signin_url
+        end
+    end
+
     #要素代入関数
     # viewからもControllerからも呼び出せるcurrent_user
     def current_user=(user)

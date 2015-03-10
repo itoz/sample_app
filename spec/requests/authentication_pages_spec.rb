@@ -117,6 +117,23 @@ describe "AuthenticationPages" do
         end
 
 
+        #サインインしていないユーザー＞マイクロポスト関連
+        describe "in the Microposts controller" do
+
+          #作成できないか
+          describe "submitting to the create action" do
+            before {post microposts_path}
+            specify{expect(page).to redirect_to(signin_path)}
+          end
+
+          #削除できないか
+          describe "submitting to the destroy action" do
+            before {delete micropost_path(FactoryGirl.create(:micropost))}
+            it {expect(page).to redirect_to(signin_path)}
+          end
+
+        end
+
       end
 
       #-----------------------

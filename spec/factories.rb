@@ -1,10 +1,6 @@
 FactoryGirl.define do
 
     factory :user do
-
-        # name "Michael Hartl"
-        # email "michael@example.om"
-
         #FacgoryGirlのsequenceメソッドを利用し一意の名前とメールを生成
         # n ブロックを置く
         sequence(:name)  { |n| "Person #{n}" }
@@ -19,11 +15,9 @@ FactoryGirl.define do
 
     end
 
-
-
     #以下のようにマイクロポスト用のファクトリーの定義にuserを含めるだけで、
     # マイクロポストに関連付けられるユーザーのことがFactory Girlに伝わります
-    factory :microposts do
+    factory :micropost do
         content "Loren ipsum"
         user
     end

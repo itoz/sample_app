@@ -3,6 +3,11 @@ SampleApp::Application.routes.draw do
   resources :users
   resources :sessions, only: [:new, :create, :destroy]
 
+  #Micropostsリソースへのインターフェイスは、
+  # 主にユーザーと静的ページのコントローラを経由して実行されるので、
+  # Micropostsコントローラにはnewやeditのようなアクションルーティングは不要 create とdestroyのみでOK
+  resources :microposts, only: [:create, :destroy]
+
   root 'static_pages#home'
   match '/signup', to: 'users#new', via: 'get'
   match '/signin', to: 'sessions#new', via: 'get'
